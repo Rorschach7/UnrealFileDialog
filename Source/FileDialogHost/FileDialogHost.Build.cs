@@ -11,7 +11,7 @@ public class FileDialogHost : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 			{ "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "FileDialogPlugin" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "FileDialogPlugin", "UMG" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

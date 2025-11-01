@@ -21,11 +21,11 @@ class FILEDIALOGPLUGIN_API UFileDialogEntryWidget : public UUserWidget, public I
 
 protected:
 	
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidgetOptional))
 	UBorder* EntryBorder;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidgetOptional))
 	UImage* IconImage;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidgetOptional))
 	UCommonTextBlock* EntryText;
 
 	UPROPERTY(EditAnywhere, Category="Styling")

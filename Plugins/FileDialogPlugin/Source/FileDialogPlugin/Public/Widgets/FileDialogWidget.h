@@ -26,7 +26,7 @@ enum class EFileDialogMode
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class FILEDIALOGPLUGIN_API UFileDialogWidget : public UCommonActivatableWidget
 {
 	GENERATED_BODY()

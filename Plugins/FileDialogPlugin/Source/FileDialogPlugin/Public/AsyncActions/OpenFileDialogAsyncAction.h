@@ -8,7 +8,7 @@
 #include "OpenFileDialogAsyncAction.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FFileDialogAsyncActionDelegate,
-	bool, bCanceled,
+	bool, bCancelled,
 	FString, FilePath
 );
 
@@ -62,14 +62,14 @@ public:
 	 * @param ConfirmText The text on the confirm button
 	 * @param CancelText The text on the cancel button
 	 * @param StartLocation The path the file dialog should open at 
-	 * @param FileNameSuggestion The file name that will be used be default
+	 * @param SuggestedFileName The file name that will be used be default
 	 * @param InFileExtension The file extension that is enforced for the saved file
 	 * @return 
 	 */
 	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", AutoCreateRefTerm="FileExtensions", BlueprintInternalUseOnly=true))
 	static UOpenFileDialogAsyncAction* ShowSaveFileDialogAsync(
 		UObject* WorldContextObject, UFileDialogWidget* FileDialogWidget, const FText& WindowTitle, const FText& ConfirmText, const
-		FText& CancelText, const FString& StartLocation, const FString& FileNameSuggestion, const FString& InFileExtension);
+		FText& CancelText, const FString& StartLocation, const FString& SuggestedFileName, const FString& InFileExtension);
 	
 	UPROPERTY(BlueprintAssignable)
 	FFileDialogAsyncActionDelegate OnFileDialogCompleted;
@@ -80,6 +80,6 @@ protected:
 
 	virtual void Activate() override;	
 	
-	virtual void HandleFileDialogCompleted(bool bCanceled, FString FilePath);
+	virtual void HandleFileDialogCompleted(bool bCancelled, FString FilePath);
 	
 };

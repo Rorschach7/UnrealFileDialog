@@ -23,14 +23,20 @@ void UFileDialogEntryWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	IconSize = IconImage->GetBrush().GetImageSize();
+	if (IconImage)
+	{
+		IconSize = IconImage->GetBrush().GetImageSize();		
+	}
 }
 
 void UFileDialogEntryWidget::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-	
-	EntryBorder->SetBrush(bIsSelected ? SelectedHoveredStyle : HoveredStyle);
+
+	if (EntryBorder)
+	{
+		EntryBorder->SetBrush(bIsSelected ? SelectedHoveredStyle : HoveredStyle);		
+	}
 }
 
 void UFileDialogEntryWidget::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -48,7 +54,10 @@ void UFileDialogEntryWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 	checkf(Entry, TEXT("Fatal Error"));
 
 	bIsSelected = false;
-	EntryText->SetText(FText::FromString(Entry->GetItemName()));
+	if (EntryText)
+	{
+		EntryText->SetText(FText::FromString(Entry->GetItemName()));		
+	}
 	UpdateIcon();	
 	UpdateBorder();
 }
@@ -61,6 +70,11 @@ void UFileDialogEntryWidget::NativeOnItemSelectionChanged(bool bInIsSelected)
 
 void UFileDialogEntryWidget::UpdateBorder()
 {
+	if (!EntryBorder)
+	{
+		return;
+	}
+	
 	if (bIsSelected)
 	{
 		EntryBorder->SetBrush(SelectedBrush);
@@ -79,6 +93,10 @@ void UFileDialogEntryWidget::UpdateBorder()
 
 void UFileDialogEntryWidget::UpdateIcon()
 {
+	if (!IconImage)
+	{
+		return;
+	}
 	if (Entry && Entry->IsFile())
 	{
 		if (FileTypeMapping.Contains(Entry->GetFileType()))

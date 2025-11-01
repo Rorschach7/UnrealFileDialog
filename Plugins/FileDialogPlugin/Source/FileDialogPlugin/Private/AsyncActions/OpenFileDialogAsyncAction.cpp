@@ -63,7 +63,7 @@ UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowOpenDirectoryDialogA
 
 UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowSaveFileDialogAsync(UObject* WorldContextObject,
 	UFileDialogWidget* FileDialogWidget, const FText& WindowTitle, const FText& ConfirmText, const FText& CancelText,
-	const FString& StartLocation, const FString& FileNameSuggestion, const FString& InFileExtension)
+	const FString& StartLocation, const FString& SuggestedFileName, const FString& InFileExtension)
 {
 	if (!FileDialogWidget)
 	{
@@ -73,7 +73,7 @@ UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowSaveFileDialogAsync(
 	UOpenFileDialogAsyncAction* Task = NewObject<UOpenFileDialogAsyncAction>(WorldContextObject);
 	FileDialogWidget->OnDialogClosed().AddUObject(Task, &UOpenFileDialogAsyncAction::HandleFileDialogCompleted);
 	const bool bOpenedDialog = FileDialogWidget->SetAsSaveFileDialog(WindowTitle, ConfirmText, CancelText,
-	                                                                 StartLocation, FileNameSuggestion,
+	                                                                 StartLocation, SuggestedFileName,
 	                                                                 InFileExtension);
 	if (!bOpenedDialog)
 	{
@@ -95,9 +95,9 @@ void UOpenFileDialogAsyncAction::Activate()
 	Super::Activate();
 }
 
-void UOpenFileDialogAsyncAction::HandleFileDialogCompleted(bool bCanceled, FString FilePath)
+void UOpenFileDialogAsyncAction::HandleFileDialogCompleted(bool bCancelled, FString FilePath)
 {
-	OnFileDialogCompleted.Broadcast(bCanceled, FilePath);
+	OnFileDialogCompleted.Broadcast(bCancelled, FilePath);
 	if (DialogWidget)
 	{
 		DialogWidget->OnDialogClosed().RemoveAll(this);
