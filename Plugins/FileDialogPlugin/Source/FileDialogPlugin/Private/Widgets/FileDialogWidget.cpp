@@ -6,6 +6,7 @@
 
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
+#include "Components/ComboBoxString.h"
 #include "Components/EditableTextBox.h"
 #include "Misc/Paths.h"
 #include "Misc/PathViews.h"
@@ -60,6 +61,8 @@ void UFileDialogWidget::ResetDialog()
 {
 	LocationHistory.Empty();
 	CurrentLocation.Empty();
+	FileTypeFilter.Empty();
+	FileExtensions.Empty();
 	FileNameBox->SetText(FText::GetEmpty());
 	DirBox->SetText(FText::GetEmpty());
 	SelectedItem = nullptr;
@@ -279,20 +282,13 @@ void UFileDialogWidget::OnFileCommited(const FText& Text, ETextCommit::Type Comm
 	FString FileName = Text.ToString();
 	FPaths::MakeStandardFilename(FileName);
 
-	// Make sure the file extension is correct
+
+	FString FilePath = FPaths::Combine(CurrentLocation, FileName);
+	// Append the selected file extension
 	if (FileDialogMode == EFileDialogMode::SaveFile)
 	{
-		// Save file
-		// Check the file ending
-		FString Extension = FPaths::GetExtension(FileName);
-		if (Extension.IsEmpty() || !Extension.Equals(FileExtension))
-		{
-			FPaths::SetExtension(FileName, FileExtension);
-			FileNameBox->SetText(FText::FromString(FileName));
-		}
+		FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
 	}
-
-	const FString FilePath = FPaths::Combine(CurrentLocation, FileName);
 	ConfirmFilePath(FilePath);
 }
 
@@ -339,10 +335,11 @@ bool UFileDialogWidget::SetAsOpenFileDialog(const FText& InTitle, const FText& C
 			return false;
 		}
 	}
+	ResetDialog();
 	InitText(InTitle, ConfirmText, CancelText);
 	FileDialogMode = EFileDialogMode::OpenFile;
 	FileNameBox->SetIsEnabled(true);
-	ResetDialog();
+	ExtensionBox->SetVisibility(ESlateVisibility::Collapsed);
 	ActivateWidget();
 
 	NavigateTo(StartLocation);
@@ -352,10 +349,11 @@ bool UFileDialogWidget::SetAsOpenFileDialog(const FText& InTitle, const FText& C
 bool UFileDialogWidget::SetAsOpenDirectoryDialog(const FText& InTitle, const FText& ConfirmText,
 	const FText& CancelText, const FString& StartLocation)
 {	
+	ResetDialog();
 	InitText(InTitle, ConfirmText, CancelText);
 	FileDialogMode = EFileDialogMode::OpenDirectory;
 	FileNameBox->SetIsEnabled(false);
-	ResetDialog();
+	ExtensionBox->SetVisibility(ESlateVisibility::Collapsed);
 	ActivateWidget();
 
 	NavigateTo(StartLocation);
@@ -364,19 +362,34 @@ bool UFileDialogWidget::SetAsOpenDirectoryDialog(const FText& InTitle, const FTe
 
 bool UFileDialogWidget::SetAsSaveFileDialog(const FText& InTitle, const FText& ConfirmText, const FText& CancelText,
                                             const FString& StartLocation, const FString& FileNameSuggestion,
-                                            const FString& InFileExtension)
-{
-	FileExtension = InFileExtension;
-	if (FileExtension.IsEmpty())
+                                            const TArray<FString>& InFileExtensions)
+{	
+	ResetDialog();
+	FileExtensions = InFileExtensions;
+	FileTypeFilter.Empty();
+	if (FileExtensions.IsEmpty())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Extension string is empty!"))
+		UE_LOG(LogTemp, Error, TEXT("FileExtensions is empty!"))
 		return false;
 	}
 	InitText(InTitle, ConfirmText, CancelText);
-	FileNameBox->SetText(FText::FromString(FPaths::SetExtension(FileNameSuggestion, InFileExtension)));
+	FileNameBox->SetText(FText::FromString(FileNameSuggestion));
+	ExtensionBox->SetVisibility(ESlateVisibility::Visible);
+	ExtensionBox->ClearOptions();
+	for (FString FileExtension : FileExtensions)
+	{
+		if (FileExtension.IsEmpty())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FileExtensions contains empty strings"));
+			continue;
+		}
+		FileTypeFilter.Add(FileExtension);
+		ExtensionBox->AddOption(FileExtension);
+	}
+	ExtensionBox->SetSelectedIndex(0);
+	
 	FileDialogMode = EFileDialogMode::SaveFile;
 	FileNameBox->SetIsEnabled(true);
-	ResetDialog();
 	ActivateWidget();
 
 	NavigateTo(StartLocation);

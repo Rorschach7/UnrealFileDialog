@@ -62,7 +62,7 @@ UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowOpenDirectoryDialogA
 
 UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowSaveFileDialogAsync(UObject* WorldContextObject,
 	UFileDialogWidget* FileDialogWidget, const FText& WindowTitle, const FText& ConfirmText, const FText& CancelText,
-	const FString& StartLocation, const FString& SuggestedFileName, const FString& InFileExtension)
+	const FString& StartLocation, const FString& SuggestedFileName, const TArray<FString>& InFileExtensions)
 {
 	if (!FileDialogWidget)
 	{
@@ -73,7 +73,7 @@ UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowSaveFileDialogAsync(
 	FileDialogWidget->OnDialogClosed().AddUObject(Task, &UOpenFileDialogAsyncAction::HandleFileDialogCompleted);
 	const bool bOpenedDialog = FileDialogWidget->SetAsSaveFileDialog(WindowTitle, ConfirmText, CancelText,
 	                                                                 StartLocation, SuggestedFileName,
-	                                                                 InFileExtension);
+	                                                                 InFileExtensions);
 	if (!bOpenedDialog)
 	{
 		return Task;

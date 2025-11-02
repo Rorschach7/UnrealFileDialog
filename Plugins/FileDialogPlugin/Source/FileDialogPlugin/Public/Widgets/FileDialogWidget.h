@@ -7,6 +7,8 @@
 #include "CommonListView.h"
 #include "FileDialogWidget.generated.h"
 
+class UComboBoxString;
+class UComboBox;
 class UCommonBorder;
 class UFileDialogButton;
 class UCommonButtonBase;
@@ -50,6 +52,8 @@ protected:
 	UPROPERTY(meta = (BindWidget, OptionalWidget))
 	UEditableTextBox* FileNameBox;
 	UPROPERTY(meta = (BindWidget, OptionalWidget))
+	UComboBoxString* ExtensionBox;
+	UPROPERTY(meta = (BindWidget, OptionalWidget))
 	UFileDialogButton* ConfirmBtn;
 	UPROPERTY(meta = (BindWidget, OptionalWidget))
 	UFileDialogButton* CancelBtn;
@@ -67,7 +71,7 @@ protected:
 	FString CurrentLocation;
 	TArray<FString> LocationHistory;
 
-	FString FileExtension;
+	TArray<FString> FileExtensions;
 	TArray<FString> FileTypeFilter;
 
 	virtual void NativeOnInitialized() override;	
@@ -135,11 +139,11 @@ public:
 	 * @param CancelText 
 	 * @param StartLocation
 	 * @param FileNameSuggestion
-	 * @param InFileExtension 
+	 * @param InFileExtensions 
 	 * @return 
 	 */
 	UFUNCTION(BlueprintCallable, Category = "FileDialog")
 	virtual bool SetAsSaveFileDialog(const FText& InTitle, const FText& ConfirmText, const FText& CancelText, const FString& StartLocation, const FString&
-	                                 FileNameSuggestion, const FString& InFileExtension);
+	                                 FileNameSuggestion, const TArray<FString>& InFileExtensions);
 	
 };

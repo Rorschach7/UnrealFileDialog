@@ -63,13 +63,14 @@ public:
 	 * @param CancelText The text on the cancel button
 	 * @param StartLocation The path the file dialog should open at 
 	 * @param SuggestedFileName The file name that will be used be default
-	 * @param InFileExtension The file extension that is enforced for the saved file
+	 * @param InFileExtensions
 	 * @return 
 	 */
 	UFUNCTION(BlueprintCallable, meta=(WorldContext = "WorldContextObject", AutoCreateRefTerm="FileExtensions", BlueprintInternalUseOnly=true))
 	static UOpenFileDialogAsyncAction* ShowSaveFileDialogAsync(
 		UObject* WorldContextObject, UFileDialogWidget* FileDialogWidget, const FText& WindowTitle, const FText& ConfirmText, const
-		FText& CancelText, const FString& StartLocation, const FString& SuggestedFileName, const FString& InFileExtension);
+		FText& CancelText, const FString& StartLocation, const FString& SuggestedFileName, const TArray<FString>&
+		InFileExtensions);
 	
 	UPROPERTY(BlueprintAssignable)
 	FFileDialogAsyncActionDelegate OnFileDialogCompleted;
