@@ -1,8 +1,7 @@
 ﻿// Copyright Kevin Lichtenberg. All Rights Reserved. kevlicht@gmail.com
 
 #include "AsyncActions/OpenFileDialogAsyncAction.h"
-
-#include "RHITransientResourceAllocator.h"
+#include "Engine/Engine.h"
 #include "Widgets/FileDialogWidget.h"
 
 UOpenFileDialogAsyncAction* UOpenFileDialogAsyncAction::ShowOpenFileDialogAsync(UObject* WorldContextObject,

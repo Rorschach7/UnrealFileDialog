@@ -3,10 +3,13 @@
 
 #include "Widgets/FileDialogWidget.h"
 
+
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/EditableTextBox.h"
-#include "DSP/Encoders/OpusEncoder.h"
+#include "Misc/Paths.h"
+#include "Misc/PathViews.h"
+#include "HAL/PlatformFileManager.h"
 #include "Widgets/FileDialogButton.h"
 #include "Widgets/FileDialogEntryWidget.h"
 

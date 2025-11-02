@@ -3,6 +3,7 @@
 
 #include "Widgets/FileDialogEntryWidget.h"
 
+#include "Misc/Paths.h"
 #include "CommonTextBlock.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
