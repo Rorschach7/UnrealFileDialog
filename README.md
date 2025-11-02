@@ -147,9 +147,18 @@ void ADialogTestActor::OpenFileDialog()
 > [!NOTE]
 > This project also contains a C++ and a blueprint example.
 
+## Styling and Extendability
+
+The fastest way to adjust the look of the widget is to copy the WBP_FileDialog blueprint from the plugin's content directory to your own content directory and adjust the styling.
+TextBlocks, Borders, and Buttons can be styled by using the CommonUI plugin's style blueprints. The input boxes must be styled directly in the UMG editor. The layout can also be changed to your liking.
+Just make sure not to change the name of the bound widgets.
+
+You can also inherit from the native UFileDialogWidget class. Almost all functions are virtual and can easily be overridden and adjusted.
+
 ## What's next?
 
 - extension selection via combo box for file saving dialog
 - ability to create a new directory via the file dialog widget
+- side panel with shortcuts to volumes and special directories (home, desktop, etc.)
 
  
