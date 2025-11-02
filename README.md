@@ -17,11 +17,13 @@ There is also an async blueprint node for easier callback handling.
 ## How to install
 
 ### Compile plugin from source
-Clone or download this repository and navigate to the "Plugins" folder. There is the folder called "FileDialogPlugin".
-Copy the entire folder into you project's "Plugins" folder, regenerate your project files and build your solution.
+Clone or download this repository and navigate to the "Plugins" folder. There is a folder called "FileDialogPlugin".
+Copy the entire folder into your project's "Plugins" folder, regenerate your project files, and build your solution.
 
 ### Use binaries
-TODO 
+If you have a pure blueprint project and can't compile the source files, you can use the binaries.
+Download a release that fits your Unreal Engine version and unpack the zip file. Copy the unzipped folder into your project's "Plugins" folder.
+You might need to create the "Plugins" folder if it does not exist already.
 
 ## How to use
 
@@ -31,7 +33,7 @@ Before you can use the widget, you always need to **initialize** the widget with
 - SetAsSaveFileDialog
 
 ### Blueprints
-First you need to have a live instance of the UFileDialogWidget class.
+First, you need to have a live instance of the UFileDialogWidget class.
 Then, you can just use one of the following blueprint nodes:
 
 ![thumbnail](/assets/fileDialogBlueprintNodes.jpg)
@@ -143,11 +145,11 @@ void ADialogTestActor::OpenFileDialog()
 ```
 
 > [!NOTE]
-> This project also contains a c++ and a blueprint example.
+> This project also contains a C++ and a blueprint example.
 
 ## What's next?
 
 - extension selection via combo box for file saving dialog
-- ability to create a new directory via the fiel dialog widget
+- ability to create a new directory via the file dialog widget
 
  
