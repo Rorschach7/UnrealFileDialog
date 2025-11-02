@@ -144,4 +144,10 @@ void ADialogTestActor::OpenFileDialog()
 
 > [!NOTE]
 > This project also contains a c++ and a blueprint example.
+
+## What's next?
+
+- extension selection via combo box for file saving dialog
+- ability to create a new directory via the fiel dialog widget
+
  
