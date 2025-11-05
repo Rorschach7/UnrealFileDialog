@@ -2,7 +2,7 @@
 
 ![thumbnail](/assets/fileDialog.jpg)
 
-A simple plugin for a runtime file dialog made with UMG. It is entirely written in C++ while offering full blueprint compatibility.
+A simple Unreal Engine 5 plugin for a runtime file dialog made with UMG. It is entirely written in C++ while offering full blueprint compatibility.
 
 ## What it offers
 
