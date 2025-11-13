@@ -7,6 +7,7 @@
 #include "CommonListView.h"
 #include "FileDialogWidget.generated.h"
 
+class UFileDialogShortcutWidget;
 class UComboBoxString;
 class UComboBox;
 class UCommonBorder;
@@ -59,6 +60,11 @@ protected:
 	UFileDialogButton* CancelBtn;
 	UPROPERTY(meta = (BindWidget, OptionalWidget))
 	UCommonBorder* QuickAccessPanel;
+
+	UPROPERTY(meta = (BindWidget, OptionalWidget))
+	UFileDialogShortcutWidget* DrivePanel;
+	UPROPERTY(meta = (BindWidget, OptionalWidget))
+	UFileDialogShortcutWidget* SystemPanel;
 
 	UPROPERTY()
 	TArray<UFileDialogItem*> Items;

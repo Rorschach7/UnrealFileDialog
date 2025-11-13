@@ -11,8 +11,10 @@
 #include "Misc/Paths.h"
 #include "Misc/PathViews.h"
 #include "HAL/PlatformFileManager.h"
+#include "Utils/FileDialogUtils.h"
 #include "Widgets/FileDialogButton.h"
 #include "Widgets/FileDialogEntryWidget.h"
+#include "Widgets/FileDialogShortcutWidget.h"
 
 void UFileDialogWidget::NativeOnInitialized()
 {
@@ -49,6 +51,19 @@ void UFileDialogWidget::NativeOnInitialized()
 	if (FileNameBox)
 	{
 		FileNameBox->OnTextCommitted.AddDynamic(this, &UFileDialogWidget::OnFileCommited);
+	}
+	if (DrivePanel)
+	{
+		TArray<FString> Drives = UFileDialogUtils::GetDrives();
+		for (FString Drive : Drives)
+		{
+			DrivePanel->AddEntry(FText::FromString(Drive), Drive, TEXT("#drive"));
+			UE_LOG(LogTemp, Display, TEXT("Drive %s"), *Drive);
+		}
+	}
+	if (SystemPanel)
+	{
+		SystemPanel->AddEntry(NSLOCTEXT("FileDialogPlugin", "Home", "Home"), FPlatformProcess::UserHomeDir(), TEXT("#home"));
 	}
 
 	ItemsListView->OnItemSelectionChanged().AddUObject(this, &UFileDialogWidget::HandleItemClicked);	
@@ -189,6 +204,17 @@ void UFileDialogWidget::HandleConfirm()
 		NavigateTo(SelectedItem->GetFullPath());
 	}
 
+	if (FileDialogMode == EFileDialogMode::SaveFile)
+	{
+		FString FileName = FileNameBox->GetText().ToString();
+		FPaths::MakeStandardFilename(FileName);
+
+		FString FilePath = FPaths::Combine(CurrentLocation, FileName);
+		// Append the selected file extension
+		FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
+		return;
+	}
+
 	// Default 
 	if (FileDialogMode == EFileDialogMode::OpenDirectory)
 	{
@@ -279,17 +305,19 @@ void UFileDialogWidget::OnDirCommited(const FText& Text, ETextCommit::Type Commi
 
 void UFileDialogWidget::OnFileCommited(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	FString FileName = Text.ToString();
-	FPaths::MakeStandardFilename(FileName);
-
-
-	FString FilePath = FPaths::Combine(CurrentLocation, FileName);
-	// Append the selected file extension
-	if (FileDialogMode == EFileDialogMode::SaveFile)
+	if (CommitMethod == ETextCommit::OnEnter)
 	{
-		FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
+		FString FileName = Text.ToString();
+		FPaths::MakeStandardFilename(FileName);
+
+		FString FilePath = FPaths::Combine(CurrentLocation, FileName);
+		// Append the selected file extension
+		if (FileDialogMode == EFileDialogMode::SaveFile)
+		{
+			FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
+		}
+		ConfirmFilePath(FilePath);
 	}
-	ConfirmFilePath(FilePath);
 }
 
 void UFileDialogWidget::InitText(const FText& InTitle, const FText& ConfirmText, const FText& CancelText)
