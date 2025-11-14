@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.0",
+	"VersionName": "1.1",
 	"FriendlyName": "FileDialogPlugin",
 	"Description": "A simple plugin for a runtime file dialog made with UMG.",
 	"Category": "UI",
@@ -26,5 +26,5 @@
 			"Enabled": true
 		}
 	],
-	"SupportURL": ""
+	"SupportURL": "https://github.com/Rorschach7/UnrealFileDialog"
 }
