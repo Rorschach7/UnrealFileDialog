@@ -225,6 +225,17 @@ void UFileDialogWidget::HandleConfirm()
 		return;
 	}
 
+	if (FileDialogMode == EFileDialogMode::SaveFile)
+	{
+		FString FileName = FileNameBox->GetText().ToString();
+		FPaths::MakeStandardFilename(FileName);
+
+		FString FilePath = FPaths::Combine(CurrentLocation, FileName);
+		// Append the selected file extension
+		FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
+		return;
+	}
+
 	// Default 
 	if (FileDialogMode == EFileDialogMode::OpenDirectory)
 	{
