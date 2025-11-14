@@ -242,35 +242,37 @@ void UFileDialogWidget::HandleItemDoubleClicked(UObject* Object)
 
 void UFileDialogWidget::ConfirmFilePath(const FString& FilePath)
 {
+	FString FinalPath = FilePath;
+	FPaths::NormalizeFilename(FinalPath);
 	if (FileDialogMode == EFileDialogMode::OpenFile)
 	{
-		if (FPaths::FileExists(FilePath))
+		if (FPaths::FileExists(FinalPath))
 		{
-			OnDialogClosedEvent.Broadcast(false, FilePath);
-			OnFileDialogClosed.Broadcast(false, FilePath);
+			OnDialogClosedEvent.Broadcast(false, FinalPath);
+			OnFileDialogClosed.Broadcast(false, FinalPath);
 			DeactivateWidget();			
 			return;
 		}
-		UE_LOG(LogTemp, Error, TEXT("File does not exist at %s"), *FilePath);
+		UE_LOG(LogTemp, Error, TEXT("File does not exist at %s"), *FinalPath);
 	}
 	else if (FileDialogMode == EFileDialogMode::OpenDirectory)
 	{
-		if (FPaths::DirectoryExists(FilePath))
+		if (FPaths::DirectoryExists(FinalPath))
 		{
-			OnDialogClosedEvent.Broadcast(false, FilePath);
-			OnFileDialogClosed.Broadcast(false, FilePath);
+			OnDialogClosedEvent.Broadcast(false, FinalPath);
+			OnFileDialogClosed.Broadcast(false, FinalPath);
 			DeactivateWidget();			
 			return;
 		}
-		UE_LOG(LogTemp, Error, TEXT("Directory does not exist at %s"), *FilePath);
+		UE_LOG(LogTemp, Error, TEXT("Directory does not exist at %s"), *FinalPath);
 	}
 	else 
-	{
+	{		
 		// Save file
 		// Maybe handle overwrite?
-		OnDialogClosedEvent.Broadcast(false, FilePath);
-		OnFileDialogClosed.Broadcast(false, FilePath);
-		DeactivateWidget();		
+		OnDialogClosedEvent.Broadcast(false, FinalPath);
+		OnFileDialogClosed.Broadcast(false, FinalPath);
+		DeactivateWidget();
 	}
 }
 
