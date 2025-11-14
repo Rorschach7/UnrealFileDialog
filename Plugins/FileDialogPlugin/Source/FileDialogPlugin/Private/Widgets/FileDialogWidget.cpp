@@ -186,7 +186,17 @@ void UFileDialogWidget::HandleConfirm()
 		}
 		
 		// Open dir
-		NavigateTo(SelectedItem->GetFullPath());
+		if (!SelectedItem->IsFile()) {
+			NavigateTo(SelectedItem->GetFullPath());
+		}
+	}
+
+	if (FileDialogMode == EFileDialogMode::SaveFile)
+	{
+		FString FinalPath = FPaths::Combine(CurrentLocation, FileNameBox->GetText().ToString());
+		FinalPath = FPaths::SetExtension(FinalPath, ExtensionBox->GetSelectedOption());
+		ConfirmFilePath(FinalPath);
+		return;
 	}
 
 	// Default 
@@ -279,17 +289,18 @@ void UFileDialogWidget::OnDirCommited(const FText& Text, ETextCommit::Type Commi
 
 void UFileDialogWidget::OnFileCommited(const FText& Text, ETextCommit::Type CommitMethod)
 {
-	FString FileName = Text.ToString();
-	FPaths::MakeStandardFilename(FileName);
-
-
-	FString FilePath = FPaths::Combine(CurrentLocation, FileName);
-	// Append the selected file extension
-	if (FileDialogMode == EFileDialogMode::SaveFile)
+	if (CommitMethod == ETextCommit::OnEnter)
 	{
-		FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());	
+		FString FileName = Text.ToString();
+
+		FString FilePath = FPaths::Combine(CurrentLocation, FileName);
+		// Append the selected file extension
+		if (FileDialogMode == EFileDialogMode::SaveFile)
+		{
+			FilePath = FPaths::SetExtension(FilePath, ExtensionBox->GetSelectedOption());
+		}
+		ConfirmFilePath(FilePath);
 	}
-	ConfirmFilePath(FilePath);
 }
 
 void UFileDialogWidget::InitText(const FText& InTitle, const FText& ConfirmText, const FText& CancelText)
