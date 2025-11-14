@@ -54,6 +54,7 @@ void UFileDialogShortcutEntryWidget::NativeOnListItemObjectSet(UObject* ListItem
 	checkf(Entry, TEXT("Fatal Error"));
 
 	bIsSelected = false;
+	ItemType = Entry->GetFileType();
 	if (EntryText)
 	{
 		EntryText->SetText((Entry->GetItemName(false)));		
@@ -93,9 +94,9 @@ void UFileDialogShortcutEntryWidget::UpdateIcon()
 	const UIconMappingStyle* Style = GetIconMapping();
 	if (Style)
 	{
-		if (Style->IconMappings.Contains(IconType))
+		if (Style->IconMappings.Contains(ItemType))
 		{
-			IconImage->SetBrush(Style->IconMappings[IconType]);
+			IconImage->SetBrush(Style->IconMappings[ItemType]);
 		}
 	}
 	

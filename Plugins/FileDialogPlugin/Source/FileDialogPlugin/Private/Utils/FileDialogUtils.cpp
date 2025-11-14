@@ -3,7 +3,7 @@
 
 #include "Utils/FileDialogUtils.h"
 
-TArray<FString> UFileDialogUtils::GetDrives()
+TArray<FString> UFileDialogUtils::GetDrives(bool bLetterOnly)
 {
 	TArray<FString> Drives;
 	FString Letters = TEXT("CDEFGHIJKLMNOPQRSTUVWXYZ");
@@ -18,7 +18,15 @@ TArray<FString> UFileDialogUtils::GetDrives()
 		const FFileStatData Data = FPlatformFileManager::Get().GetPlatformFile().GetStatData(*Drive);
 		if (Data.bIsDirectory)
 		{
-			Drives.Add(Drive);
+			if (bLetterOnly)
+			{
+				FString DriveLetter = Drive.Left(1);
+				Drives.Add(DriveLetter);
+			}
+			else
+			{
+				Drives.Add(Drive);				
+			}
 		}
 	}
 	return Drives;

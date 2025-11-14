@@ -54,11 +54,11 @@ void UFileDialogWidget::NativeOnInitialized()
 	}
 	if (DrivePanel)
 	{
-		TArray<FString> Drives = UFileDialogUtils::GetDrives();
-		for (FString Drive : Drives)
+		TArray<FString> Drives = UFileDialogUtils::GetDrives(true);
+		for (FString DriveLetter : Drives)
 		{
-			DrivePanel->AddEntry(FText::FromString(Drive), Drive, TEXT("#drive"));
-			UE_LOG(LogTemp, Display, TEXT("Drive %s"), *Drive);
+			DrivePanel->AddEntry(FText::FromString(DriveLetter), DriveLetter + TEXT(":/"), TEXT("#drive"));
+			UE_LOG(LogTemp, Display, TEXT("Drive %s"), *DriveLetter);
 		}
 	}
 	if (SystemPanel)

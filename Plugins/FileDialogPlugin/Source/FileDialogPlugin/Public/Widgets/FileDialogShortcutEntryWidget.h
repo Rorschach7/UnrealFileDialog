@@ -40,8 +40,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Styling")
 	FSlateBrush SelectedHoveredStyle;
 	
+	/**
+	 * The type of the item as a string. In the case of a file, this is the file extension.
+	 * In the case of a directory this is a #dir or a more specialized type that can display a special icon 
+	 */
 	UPROPERTY(EditAnywhere, Category="Styling")
-	FString IconType;
+	FString ItemType;
 
 	UFileDialogShortcutItem* Entry = nullptr;
 	bool bIsSelected = false;

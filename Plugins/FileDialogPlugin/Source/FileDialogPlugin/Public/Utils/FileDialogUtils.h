@@ -16,5 +16,5 @@ class FILEDIALOGPLUGIN_API UFileDialogUtils : public UBlueprintFunctionLibrary
 
 public:
 
-	static TArray<FString> GetDrives();
+	static TArray<FString> GetDrives(bool bLetterOnly);
 };
