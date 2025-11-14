@@ -4,7 +4,7 @@
 #include "Widgets/FileDialogShortcutWidget.h"
 #include "CommonTextBlock.h"
 #include "Components/ListView.h"
-#include "Widgets/FileDialogShortcutEntryWidget.h"
+#include "Widgets/FileDialogEntryWidget.h"
 
 void UFileDialogShortcutWidget::NativePreConstruct()
 {
@@ -18,10 +18,10 @@ void UFileDialogShortcutWidget::NativePreConstruct()
 
 void UFileDialogShortcutWidget::AddEntry(const FText& Text, const FString& Location, const FString& Type)
 {
-	UFileDialogShortcutItem* Item = NewObject<UFileDialogShortcutItem>(this);
-	Item->InitShortcut(Text, Location, Type);
 	if (ShortcutList)
 	{
+		UFileDialogItem* Item = NewObject<UFileDialogItem>(this);
+		Item->InitShortcut(Text, Location, Type);
 		ShortcutList->AddItem(Item);
 	}
 }

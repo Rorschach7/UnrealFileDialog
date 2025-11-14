@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "FileDialogEntryWidget.generated.h"
 
+class UIconMappingStyle;
 class UImage;
 class UFileDialogItem;
 class UCommonTextBlock;
@@ -40,18 +41,17 @@ protected:
 	FSlateBrush SelectedHoveredStyle;
 	UPROPERTY(EditAnywhere, Category="Styling")
 	FSlateBrush DefaultFileBrush;
+
 	UPROPERTY(EditAnywhere, Category="Styling")
-	FSlateBrush DirectoryBrush;
-
-	bool bIsSelected = false;
-
+	TSubclassOf<UIconMappingStyle> IconMappingStyle;
 	/**
-	 * Used to map special icons to specific file types.
-	 * E.g. png, jpg
+	 * The type of the item as a string. In the case of a file, this is the file extension.
+	 * In the case of a directory this is a #dir or a more specialized type that can display a special icon 
 	 */
 	UPROPERTY(EditAnywhere, Category="Styling")
-	TMap<FString,FSlateBrush> FileTypeMapping;	
+	FString ItemType;
 
+	bool bIsSelected = false;
 	FVector2D IconSize;
 	UFileDialogItem* Entry = nullptr;	
 
@@ -64,6 +64,9 @@ protected:
 
 	virtual void UpdateBorder();
 	virtual void UpdateIcon();		
+	
+	virtual const UIconMappingStyle* GetIconMapping();	
+
 };
 
 // ==================================================================================
@@ -76,15 +79,15 @@ class FILEDIALOGPLUGIN_API UFileDialogItem : public UObject
 protected:
 	bool bIsFile;
 	int32 RowIndex;
-	FString ItemName;
+	FText ItemName;
+	FString ItemNameStr;
 	FString FileType = FString();
 	FString FullPath;
-
-	FString GetDirectoryName(const FString& Path);
 
 public:
 
 	virtual void Init(const FString& InFullPath, bool bInIsFile, int32 InRowIndex);
+	virtual void InitShortcut(const FText& InName, const FString& InFullPath, const FString& InFileType);
 
 	virtual FString GetItemName(bool bIncludeType = true);
 

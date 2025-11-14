@@ -7,6 +7,8 @@
 #include "CommonTextBlock.h"
 #include "Components/Border.h"
 #include "Components/Image.h"
+#include "Utils/FileDialogUtils.h"
+#include "Widgets/IconMappingStyle.h"
 
 
 void UFileDialogEntryWidget::NativePreConstruct()
@@ -18,6 +20,7 @@ void UFileDialogEntryWidget::NativePreConstruct()
 	{			
 		EntryBorder->SetBrush(EvenRowStyle);
 	}
+	UpdateIcon();
 }
 
 void UFileDialogEntryWidget::NativeOnInitialized()
@@ -54,10 +57,11 @@ void UFileDialogEntryWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 	Entry = Cast<UFileDialogItem>(ListItemObject);
 	checkf(Entry, TEXT("Fatal Error"));
 
+	ItemType = Entry->GetFileType();
 	bIsSelected = false;
 	if (EntryText)
 	{
-		EntryText->SetText(FText::FromString(Entry->GetItemName()));		
+		EntryText->SetText(FText::FromString(Entry->GetItemName()));
 	}
 	UpdateIcon();	
 	UpdateBorder();
@@ -98,35 +102,32 @@ void UFileDialogEntryWidget::UpdateIcon()
 	{
 		return;
 	}
-	if (Entry && Entry->IsFile())
+	const UIconMappingStyle* Style = GetIconMapping();
+	if (Style && Style->IconMappings.Contains(ItemType))
 	{
-		if (FileTypeMapping.Contains(Entry->GetFileType()))
-		{
-			IconImage->SetBrush(FileTypeMapping[Entry->GetFileType()]);
-		} else
-		{
-			IconImage->SetBrush(DefaultFileBrush);
-		}
-	} else
-	{
-		IconImage->SetBrush(DirectoryBrush);
+		IconImage->SetBrush(Style->IconMappings[ItemType]);
 	}
+	else
+	{
+		IconImage->SetBrush(DefaultFileBrush);
+	}
+	
 	IconImage->SetDesiredSizeOverride(IconSize);
 }
 
-// ==================================================================================
-
-FString UFileDialogItem::GetDirectoryName(const FString& Path)
-{	
-	int32 LastSlashIndex;
-
-	if (Path.FindLastChar(TEXT('/'), LastSlashIndex) || Path.FindLastChar(TEXT('\\'), LastSlashIndex))
+const UIconMappingStyle* UFileDialogEntryWidget::GetIconMapping()
+{
+	if (IconMappingStyle)
 	{
-		return Path.Mid(LastSlashIndex + 1);
+		if (const UIconMappingStyle* MappingStyle = Cast<UIconMappingStyle>(IconMappingStyle->GetDefaultObject(false)))
+		{
+			return MappingStyle;
+		}
 	}
-
-	return Path; // If no separator is found, return the whole path
+	return nullptr;
 }
+
+// ==================================================================================
 
 void UFileDialogItem::Init(const FString& InFullPath, bool bInIsFile, int32 InRowIndex)
 {	
@@ -141,22 +142,34 @@ void UFileDialogItem::Init(const FString& InFullPath, bool bInIsFile, int32 InRo
 	if (bIsFile)
 	{
 		FString ParentPath;		
-		FPaths::Split(FullPath, ParentPath, ItemName, FileType);
+		FPaths::Split(FullPath, ParentPath, ItemNameStr, FileType);
 		
 		//UE_LOG(LogTemp, Display, TEXT("FileType: %s"), *FileType);
 	} else
 	{
 		// Get Directory name		
-		ItemName = GetDirectoryName(FullPath);		
+		ItemNameStr = UFileDialogUtils::GetDirectoryName(FullPath);
+		FileType = TEXT("#dir");
 	}	
+	ItemName = FText::FromString(ItemNameStr);
 	
+}
+
+void UFileDialogItem::InitShortcut(const FText& InName, const FString& InFullPath, const FString& InFileType)
+{
+	ItemName = InName;
+	ItemNameStr = InName.ToString();
+	FullPath = InFullPath;
+	FileType = InFileType;
+	RowIndex = 0;
+	bIsFile = false;
 }
 
 FString UFileDialogItem::GetItemName(bool bIncludeType)
 {
 	if (bIsFile)
 	{
-		return bIncludeType ? FString(ItemName).Append(".").Append(FileType) : ItemName;
+		return bIncludeType ? FString(ItemNameStr).Append(".").Append(FileType) : ItemNameStr;
 	}
-	return ItemName;
+	return ItemNameStr;
 }

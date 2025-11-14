@@ -31,3 +31,15 @@ TArray<FString> UFileDialogUtils::GetDrives(bool bLetterOnly)
 	}
 	return Drives;
 }
+
+FString UFileDialogUtils::GetDirectoryName(const FString& Path)
+{
+	int32 LastSlashIndex;
+
+	if (Path.FindLastChar(TEXT('/'), LastSlashIndex) || Path.FindLastChar(TEXT('\\'), LastSlashIndex))
+	{
+		return Path.Mid(LastSlashIndex + 1);
+	}
+
+	return Path; // If no separator is found, return the whole path
+}

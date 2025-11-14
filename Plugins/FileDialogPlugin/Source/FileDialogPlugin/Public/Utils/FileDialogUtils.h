@@ -17,4 +17,6 @@ class FILEDIALOGPLUGIN_API UFileDialogUtils : public UBlueprintFunctionLibrary
 public:
 
 	static TArray<FString> GetDrives(bool bLetterOnly);
+	
+	static FString GetDirectoryName(const FString& Path);
 };

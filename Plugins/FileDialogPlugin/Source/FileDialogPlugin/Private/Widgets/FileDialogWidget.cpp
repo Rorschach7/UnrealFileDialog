@@ -63,7 +63,7 @@ void UFileDialogWidget::NativeOnInitialized()
 	}
 	if (SystemPanel)
 	{
-		SystemPanel->AddEntry(NSLOCTEXT("FileDialogPlugin", "Home", "Home"), FPlatformProcess::UserHomeDir(), TEXT("#home"));
+		SystemPanel->AddEntry(NSLOCTEXT("FileDialogPlugin", "Home", "Home"), FPlatformProcess::UserHomeDir(), TEXT("#dir"));
 	}
 
 	ItemsListView->OnItemSelectionChanged().AddUObject(this, &UFileDialogWidget::HandleItemClicked);	
